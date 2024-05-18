@@ -2,19 +2,14 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <div class="snowfall"></div>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzlUT7m_zCOb5ttCSKFkBIUegiUQLpGh8NbA6AFFtdFQ&s" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>rexx</title>
     <style>
-
-
-
-
-
         body {
             font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1f4037, #99f2c8);
             background-size: cover;
             background-position: center;
             margin: 0;
@@ -23,54 +18,87 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            overflow: hidden;
         }
 
-        .message {
-            padding: 20px;
-            border: 2px solid #ccc;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-            text-align: center;
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
         }
 
+        .overlay h1 {
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+            animation: pulse 2s infinite;
+        }
 
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
 
-
-
-
-
-        .container {
+        .sd {
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
             text-align: center;
+            background-color: rgba(255, 255, 255, 0.9);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 1s, transform 1s;
+        }
+
+        .sd.show {
+            opacity: 1;
+            transform: scale(1);
         }
 
         .profile-image {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 20px;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.5); 
-    transition: box-shadow 0.3s ease; 
-}
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
+        .profile-image:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+        }
 
         h1 {
             color: #333;
+            font-size: 2.5rem;
+        }
+
+        .description {
+            margin-bottom: 20px;
+            color: #555;
+            font-size: 1.1rem;
         }
 
         .description2 {
             margin-bottom: 50px;
-            color:  #ff0000;
+            color: #ff0000;
             font-style: italic;
+            font-size: 1rem;
         }
-        .description {
-            margin-bottom: 20px;
-            color:  #c4b0b0;
-        }
-
 
         .links {
             list-style: none;
@@ -91,136 +119,104 @@
             border-radius: 30px;
             background-color: #afafaf;
             display: inline-block;
-            transition: transform 0.3s ease; /* transform özelliği için geçiş efekti */
+            transition: transform 0.3s ease, background-color 0.3s ease;
         }
 
-        .sd {
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-            text-align: center;
-        }
-
-        .menu {
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-            position: relative;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            font-size: 24px;
-        }
-
-        .close-btn:hover {
-            color: #ff0000; /* Çarpı simgesinin rengini değiştirme */
-        }
         .links a:hover {
-            transform: scale(1.15); /* Maus üstüne gelindiğinde butonun boyutunu büyüt */
+            transform: scale(1.15);
+            background-color: #8f8f8f;
         }
-        html,
-body {
-	margin: 0
-}
 
-#karAlani {
-	position: absolute;
-	width: 100%;
-	min-height: 100%;
-	background-color: #171723;
-	overflow: hidden;
-	z-index: -1;
-}
+        #karAlani {
+            position: absolute;
+            width: 100%;
+            min-height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
 
-.fa-snowflake-o {
-	color: #fff;
-	position: absolute;
-	top: -20px;
-	animation: yagis linear forwards;
-}
+        .fa-snowflake {
+            color: #fff;
+            position: absolute;
+            top: -20px;
+            animation: yagis linear infinite;
+        }
 
-@keyframes yagis {
-	to {
-		transform: translateY(105vh);
-	}
-} 
-
+        @keyframes yagis {
+            to {
+                transform: translateY(105vh);
+            }
+        }
     </style>
-    <!-- Site faviconu -->
-        <link rel="icon" href="https://cdn.discordapp.com/avatars/756960762123124767/a_e08612cda903c02d2296249b2c88a8dc" type="image/ico">
-        <link rel="shortcut icon" href="" type="image/jpg">
-
-
-        
-
-
-        <head>
-            <link rel="stylesheet"
-                  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
-        </head>
-        <body>
-            <div id="karAlani"></div>
-        </body>
-
-
-
-
-
-
-
-
-        
-    
-    <body onkeydown="return false"></body>
-
-
-    
-    <div class="sd">
+    <link rel="icon" href="https://cdn.discordapp.com/avatars/756960762123124767/a_e08612cda903c02d2296249b2c88a8dc" type="image/ico">
+</head>
+<body onkeydown="return false">
+    <div id="karAlani"></div>
+    <div class="overlay" id="overlay">
+        <h1 onclick="showMenu()">Tıkla</h1>
+    </div>
+    <div class="sd" id="menu">
         <img class="profile-image" id="profile-img" src="https://cdn.discordapp.com/avatars/756960762123124767/bc04cb9226a399a9685d8e7f355d357a.webp?size=1024" alt="rexx">
-
         <h1>Mr ' Baron</h1>
         <p class="description">Piyasadaki en kaliteli & güncel discord botları için dm atabilirsiniz. Fiyatta anlaşabiliriz. 😉</p>
         <p class="description2">Takdir ediliyorsan değil taklid ediliyorsan başarmışsın demektir.</p>
-
         <ul class="links">
-            <li><a href="https://discord.gg/xz7xmRFnzg"><i class="fa-brands fa-discord"> Discord</i></a></li>
+            <li><a href="https://discord.gg/Pjbfx3CD5k"><i class="fa-brands fa-discord"> Discord</i></a></li>
             <li><a href="https://www.youtube.com/@adoniscode"><i class="fa-brands fa-youtube"> Youtube</i></a></li>
-
         </ul>
         <span class="theme-mode"></span>
     </div>
-    <head>
-        
-        <script>
-		        var isNS = (navigator.appName == "31pleasant") ? 1 : 0;
-var EnableRightClick = 0;
-if(isNS)
-document.captureEvents(Event.MOUSEDOWN||Event.MOUSEUP);
-function mischandler(){
-if(EnableRightClick==1){ return true; }
-else {return false; }
-}
-function mousehandler(e){
-if(EnableRightClick==1){ return true; }
-var myevent = (isNS) ? e : event;
-var eventbutton = (isNS) ? myevent.which : myevent.button;
-if((eventbutton==2)||(eventbutton==3)) return false;
-}
-function keyhandler(e) {
-var myevent = (isNS) ? e : window.event;
-if (myevent.keyCode==96)
-EnableRightClick = 1;
-return;
-}
-document.oncontextmenu = mischandler;
-document.onkeypress = keyhandler;
-document.onmousedown = mousehandler;
-document.onmouseup = mousehandler;
-            </script>
+    <script>
+        function showMenu() {
+            const overlay = document.getElementById('overlay');
+            const menu = document.getElementById('menu');
+            overlay.style.opacity = '0';
+            overlay.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                menu.classList.add('show');
+            }, 1000); // 1 saniyelik geçiş süresi ile uyumlu
+        }
+
+        function createSnowflake() {
+            const snowflake = document.createElement('i');
+            snowflake.classList.add('fa', 'fa-snowflake');
+            snowflake.style.left = Math.random() * window.innerWidth + 'px';
+            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's'; // Fall speed
+            snowflake.style.opacity = Math.random();
+            snowflake.style.fontSize = Math.random() * 10 + 10 + 'px'; // Snowflake size
+            document.getElementById('karAlani').appendChild(snowflake);
+
+            setTimeout(() => {
+                snowflake.remove();
+            }, 5000);
+        }
+
+        setInterval(createSnowflake, 50);
+    </script>
+    <script>
+        var isNS = (navigator.appName == "Netscape") ? 1 : 0;
+        var EnableRightClick = 0;
+        if(isNS) document.captureEvents(Event.MOUSEDOWN||Event.MOUSEUP);
+        function mischandler() {
+            if(EnableRightClick == 1) return true;
+            else return false;
+        }
+        function mousehandler(e) {
+            if(EnableRightClick == 1) return true;
+            var myevent = (isNS) ? e : event;
+            var eventbutton = (isNS) ? myevent.which : myevent.button;
+            if((eventbutton == 2) || (eventbutton == 3)) return false;
+        }
+        function keyhandler(e) {
+            var myevent = (isNS) ? e : window.event;
+            if(myevent.keyCode == 96) EnableRightClick = 1;
+            return;
+        }
+        document.oncontextmenu = mischandler;
+        document.onkeypress = keyhandler;
+        document.onmousedown = mousehandler;
+        document.onmouseup = mousehandler;
+    </script>
 </body>
 </html>
